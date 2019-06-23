@@ -1,4 +1,5 @@
 # Clock
+![index](https://user-images.githubusercontent.com/47848363/59980136-18c40780-9624-11e9-8551-b9a5034a7bd9.png)
 
 ## Demo
 https://misty1636.github.io/Clock/
