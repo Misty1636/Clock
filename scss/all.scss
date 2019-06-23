@@ -1,0 +1,325 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
+
+$primary: #293B29;
+$secondary: #3d5a45;
+$dark: #212f0b;
+$white: #fff;
+$bright: #ff7600;
+$light: #b1ff00;
+
+:root {
+  --hour: 0;
+  --min: 0;
+  --sec: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,body {
+  height: 100%;
+  background: $primary;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading {
+  position: absolute;
+  .ripple,.ripple:before,.ripple:after {
+    position: absolute;
+    content: "";
+    width: 1px;
+    height: 1px;
+    border-radius: 50%;
+    opacity: 0;
+    background: $primary;
+    animation: ripples 3s ease-out;
+  }
+  .ripple:before {
+    transform: translate(-50px,10px);
+    animation-delay: 0.3s;
+  }  
+  .ripple:after {
+    transform: translate(-60px,50px);
+    animation-delay: 1s;
+  }
+}
+
+@keyframes ripples {
+  0% {
+    box-shadow: 0 0 0 0 transparent,
+                0 0 0 0 transparent,
+                0 0 0 0 transparent,
+                0 0 0 0 transparent,
+  }
+  
+  5% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 $primary,
+               0 0 0 0 rgba($white,.3),
+               0 0 0 0 rgba($secondary,.5),
+               0 0 0 0 rgba(0,0,0,0.1)
+  }
+  80% {
+    opacity: 1;
+    box-shadow: 0 0 40px 220px $primary,
+        0 0 10px 230px rgba($primary,.3),
+        0 0 30px 240px $primary,
+        0 0 10px 250px transparent
+  }
+  85% {
+    opacity: 0;
+  }
+}
+
+@keyframes opacitys {
+  0% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.clock {
+  width: 350px;
+  height: 350px;
+  background: $secondary;
+  border-radius: 60px;
+  padding: 20px;
+  animation: opacitys 4s linear;
+  &__content {
+    background: $primary;
+    border: 3px solid $dark;
+    border-radius: 50%;
+    height: 100%;
+    padding: 5px;
+    position: relative;
+    &__pattern {
+      position: relative;
+      padding: 5px;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        &:before,&:after {
+          position: absolute;
+          content: "";
+          display: block;
+          width: 2px;
+          height: 2px;
+          background: $white;
+          border-radius: 50%;
+          color: $white;
+        }
+        &:before {
+          left: 25px;
+        }
+        &:after {
+          right: 25px;
+        }
+      }
+      @for $i from 1 through 36 {
+        span:nth-child(#{$i}) {
+          transform: rotate(180deg*$i/36);
+        }
+      }
+      @for $i from 1 through 6 {
+        $n: ($i*2 - 1)*3;
+        span:nth-child(#{$n}) {
+          &:before,&:after {
+            top: -8px;
+            width: 0;
+            height: 0;
+            content: "\2726";
+            color: $bright;
+            font-size: 12px;
+          }
+          &:before {
+            left: 21px;
+          }
+          &:after {
+            right: 30px;
+          }
+        }
+      }
+      @for $i from 1 through 6 {
+        $h: $i*6;
+        span:nth-child(#{$h}) {
+          &:before,&:after {
+            top: 50%;
+            transform: translateY(-50%);
+            height: 1px;
+            width: 20px;
+            background: $bright;
+            border-radius: 0;
+
+          }
+          &:before {
+            left: 16px;
+          }
+          &:after {
+            right: 16px;
+          }
+        } 
+      }
+    }
+    &__hours {
+      padding: 5px;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      color: $white;
+      font-size: 12px;
+      font-family: 'Source Sans Pro', sans-serif;
+      line-height: 1;
+    }
+    &__hour {
+      position: absolute;
+      top: 50%;
+      width: calc(100% - 10px);
+      display: flex;
+      justify-content: space-between;
+      span:nth-child(2) {
+        margin-left: 25px;
+      }
+      @for $i from 1 through 6 {
+        &:nth-child(#{$i}) {
+          transform: translateY(-50%) rotate(180deg*$i/6);
+          span {
+            letter-spacing: 0.5px;
+            display: inline-block;
+            transform: rotate(-180deg*$i/6);
+          }
+        }
+      }
+    }
+  }
+  &__pointers {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(90deg);
+    &__hour {
+      position: absolute;
+      z-index: 1;
+      width: 150px;
+      height: 8px;
+      transform: rotate(calc(var(--hour)*1deg));
+      span {
+        position: relative;
+        display: block;
+        background: $white;
+        width: 52%;
+        height: 100%;
+        border-radius: 0 10px 10px 0;
+        &:before {
+          position: absolute;
+          left: 5px;
+          top: 50%;
+          transform: translateY(-50%);
+          content: "";
+          display: block;
+          height: 2px;
+          width: 22px;
+          background: $dark;
+        }
+      }
+    }
+    &__min {
+      width: 180px;
+      height: 8px;
+      position: absolute;
+      z-index: 2;
+      transform: rotate(calc(var(--min)*1deg));
+      span {
+        display: flex;
+        justify-content: flex-end;
+        background: $bright;
+        width: 52.2%;
+        height: 100%;
+        border-radius: 10px;
+        position: relative;
+        z-index: 5;
+        &:before,&:after {
+          content: "";
+          position: absolute;
+          display: block;
+          z-index: 5;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        // &:before {
+        //   width: 4px;
+        //   height: 4px;
+        //   border-radius: 50%;
+        //   background: $white;
+        //   right: 2px;
+        // }
+        &:after {
+          width: 35px;
+          height: 1px;
+          background: $white;
+          right: 6px;
+        }
+      }
+    }
+    &__sec {
+      width: 252px;
+      height: 12px;
+      position: absolute;
+      z-index: 3;
+      transform: rotate(calc(var(--sec)*1deg));
+      span {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: $white;
+      }
+      &:before,&:after  {
+        content: "";
+        top: 50%;
+        transform: translateY(-50%);
+        position: absolute;
+        display: block;
+        background: $light;
+        border-radius: 50%;
+      }
+      &:before {
+        width: 9px;
+        height: 9px;
+      }
+      &:after {
+        width: 7px;
+        height: 7px;
+        border: 1px solid $secondary;
+        left: 1px;
+      }
+    }
+  }
+}
+
